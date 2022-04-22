@@ -6,6 +6,8 @@ from one_level import OneLevelPred
 from bimodal import BimodalPred
 from local_adaptive import LocalAdaptivePred
 from skew import SkewPred
+from predictor import Predictor
+from yags import YagsPred
 
 class Stats:
     numCorrect = 0
@@ -31,6 +33,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         raise Exception("Usage: ./eval.py PREDICTOR TRACEFILE")
     p_arg = sys.argv[1]
+    p : Predictor
     if p_arg == 'static':
         p = StaticPred(False)
     elif p_arg == 'globalCtr':
@@ -56,12 +59,18 @@ if __name__ == '__main__':
         histLen = 12
         cwidth = 2
         p = SkewPred(indBits, histLen, cwidth)
+    elif p_arg == 'yags':
+        choiceBits = 11  # how big is the choice pht?
+        tagBits = 6
+        cacheBits = choiceBits - 1  # how big are the caches?
+        # implicit ctr-width of 2 because that's standard
+        p = YagsPred(cacheBits, choiceBits, tagBits)
     else:
         raise Exception("Unknown predictor type")
     trace_loc = sys.argv[-1]
 
     print(f"Predictor: {p.__class__.__name__}")
-    print(f"Total predictor size: {len(p)}")
+    print(f"Total predictor size: {len(p) // 8} bytes")
     print(f"Trace: {trace_loc}")
     trace = parseTrace(trace_loc)
     print(f"\tTrace has {len(trace)} branches")

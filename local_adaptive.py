@@ -1,6 +1,6 @@
 from typing import *
 from predictor import Predictor
-from sat_counter import SaturatingCounter
+from sat_counter import SaturatingCounter, wntCounter
 from shift_register import ShiftRegister
 
 class LocalAdaptivePred(Predictor):
@@ -13,7 +13,7 @@ class LocalAdaptivePred(Predictor):
         # the BHT then indexes into a PHT containing sat counters
         self.pht : List[SaturatingCounter] = []
         for i in range(2**pat_len):
-            self.pht.append(SaturatingCounter(cwid, (2**(cwid-1)-1)))
+            self.pht.append(wntCounter(cwid))
         self.ind_bits = ind_bits
     
     def __len__(self):

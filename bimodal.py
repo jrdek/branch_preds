@@ -1,6 +1,6 @@
 from typing import *
 from predictor import Predictor
-from sat_counter import SaturatingCounter
+from sat_counter import SaturatingCounter, wntCounter
 
 class BimodalPred(Predictor):
 
@@ -9,7 +9,7 @@ class BimodalPred(Predictor):
         self.bht : List[SaturatingCounter] = []
         self.ind_bits = ind_bits
         for i in range(2**ind_bits):
-            self.bht.append(SaturatingCounter(c_wid, (2**(c_wid - 1) - 1)))
+            self.bht.append(wntCounter(c_wid))
     
     def __len__(self):
         return len(self.bht) * len(self.bht[0])

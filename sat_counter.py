@@ -12,3 +12,8 @@ class SaturatingCounter:
 
     def read(self) -> bool:
         return self.ctr > (self.max >> 1)
+
+
+# convenience function: return a weakest-not-taken sat counter
+def wntCounter(width : int) -> SaturatingCounter:
+    return SaturatingCounter(width, (2**(width-1)-1))

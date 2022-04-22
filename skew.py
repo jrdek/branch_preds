@@ -1,6 +1,6 @@
 from typing import *
 from predictor import Predictor
-from sat_counter import SaturatingCounter
+from sat_counter import SaturatingCounter, wntCounter
 from shift_register import ShiftRegister
 
 # TODO: check
@@ -55,9 +55,9 @@ class SkewPred(Predictor):
         self.pht2 : List[SaturatingCounter] = []
         self.n = (ind_bits + hist_len) // 2
         for i in range(2**self.n):
-            self.pht0.append(SaturatingCounter(cwid, (2**(cwid-1)-1)))
-            self.pht1.append(SaturatingCounter(cwid, (2**(cwid-1)-1)))
-            self.pht2.append(SaturatingCounter(cwid, (2**(cwid-1)-1)))
+            self.pht0.append(wntCounter(cwid))
+            self.pht1.append(wntCounter(cwid))
+            self.pht2.append(wntCounter(cwid))
         self.ind_bits = ind_bits
     
     def __len__(self):
