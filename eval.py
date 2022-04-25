@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import math
 from gshare import GsharePred
 from static_pred import StaticPred
 from one_level import OneLevelPred
@@ -8,6 +9,7 @@ from local_adaptive import LocalAdaptivePred
 from skew import SkewPred
 from predictor import Predictor
 from yags import YagsPred
+from perceptron_pred import PerceptronPred
 
 class Stats:
     numCorrect = 0
@@ -63,8 +65,17 @@ if __name__ == '__main__':
         choiceBits = 11  # how big is the choice pht?
         tagBits = 6
         cacheBits = choiceBits - 1  # how big are the caches?
-        # implicit ctr-width of 2 because that's standard
         p = YagsPred(cacheBits, choiceBits, tagBits)
+        # 2kb-ish: 11 choice bits, 6 tag bits, (choice - 1) cache bits
+        # 4kb-ish: 12 choice bits
+        # 18kb-ish: 14 choice bits! (wow)
+    elif p_arg == 'perceptron':
+        # TODO: the paper says nothing about how big the main
+        # BHT is...
+        hashBits = 6
+        histBits = 34  # paper says this is good for 8kb
+        thresh = math.floor(1.93*histBits + 14)
+        p = PerceptronPred(hashBits, histBits, thresh)
     else:
         raise Exception("Unknown predictor type")
     trace_loc = sys.argv[-1]
